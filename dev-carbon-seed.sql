@@ -8,13 +8,13 @@ INSERT INTO actions (action,
                        co2e,
                        co2e_units,
                        type)
-VALUES ('Use less memory', 0.05, "kg",
+VALUES ('Use less memory', 0.05, 'kg',
         'memory'),
-        ('Use less storage', 0.10, "kg",
+        ('Use less storage', 0.10, 'kg',
         'storage'),
-        ('Use less CPU', 0.007, "kg",
+        ('Use less CPU', 0.007, 'kg',
         'cpu'),
-        ('promote metric reviews', 0.00000002, "kg",
+        ('promote metric reviews', 0.00000002, 'kg',
         'other');
 
  

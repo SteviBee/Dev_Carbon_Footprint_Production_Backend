@@ -25,11 +25,7 @@ class User {
     // try to find the user first
     const result = await db.query(
           `SELECT username,
-                  password,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
+                  password
            FROM users
            WHERE username = $1`,
         [username],
@@ -57,7 +53,7 @@ class User {
    **/
 
   static async register(
-      { username, password, firstName, lastName, email, isAdmin }) {
+      { username, password }) {
     const duplicateCheck = await db.query(
           `SELECT username
            FROM users
@@ -74,20 +70,12 @@ class User {
     const result = await db.query(
           `INSERT INTO users
            (username,
-            password,
-            first_name,
-            last_name,
-            email,
-            is_admin)
-           VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING username, first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
+            password)
+           VALUES ($1, $2)
+           RETURNING username`,
         [
           username,
-          hashedPassword,
-          firstName,
-          lastName,
-          email,
-          isAdmin,
+          hashedPassword
         ],
     );
 
@@ -103,11 +91,7 @@ class User {
 
   static async findAll() {
     const result = await db.query(
-          `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
+          `SELECT username
            FROM users
            ORDER BY username`,
     );
@@ -125,11 +109,7 @@ class User {
 
   static async get(username) {
     const userRes = await db.query(
-          `SELECT username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
+          `SELECT username
            FROM users
            WHERE username = $1`,
         [username],
@@ -139,12 +119,6 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
-    const userApplicationsRes = await db.query(
-          `SELECT a.job_id
-           FROM applications AS a
-           WHERE a.username = $1`, [username]);
-
-    user.applications = userApplicationsRes.rows.map(a => a.job_id);
     return user;
   }
 
@@ -165,6 +139,7 @@ class User {
    * or a serious security risks are opened.
    */
 
+  // TODODODODODODOODO - july 2022 - DELETE / EDIT
   static async update(username, data) {
     if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
@@ -209,35 +184,6 @@ class User {
     const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
-  }
-
-  /** Apply for job: update db, returns undefined.
-   *
-   * - username: username applying for job
-   * - jobId: job id
-   **/
-
-  static async applyToJob(username, jobId) {
-    const preCheck = await db.query(
-          `SELECT id
-           FROM jobs
-           WHERE id = $1`, [jobId]);
-    const job = preCheck.rows[0];
-
-    if (!job) throw new NotFoundError(`No job: ${jobId}`);
-
-    const preCheck2 = await db.query(
-          `SELECT username
-           FROM users
-           WHERE username = $1`, [username]);
-    const user = preCheck2.rows[0];
-
-    if (!user) throw new NotFoundError(`No username: ${username}`);
-
-    await db.query(
-          `INSERT INTO applications (job_id, username)
-           VALUES ($1, $2)`,
-        [jobId, username]);
   }
 }
 
