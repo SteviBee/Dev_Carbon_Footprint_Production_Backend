@@ -20,7 +20,7 @@ class User {
    *
    * Throws UnauthorizedError is user not found or wrong password.
    **/
-
+// CAPSTONE 2 - COMPLETE - checks user and returns username
   static async authenticate(username, password) {
     // try to find the user first
     const result = await db.query(
@@ -51,7 +51,7 @@ class User {
    *
    * Throws BadRequestError on duplicates.
    **/
-
+// CAPSTONE 2 - COMPLETE - creates new user and returns username
   static async register(
       { username, password }) {
     const duplicateCheck = await db.query(
@@ -88,7 +88,7 @@ class User {
    *
    * Returns [{ username, first_name, last_name, email, is_admin }, ...]
    **/
-
+// CAPSTONE 2 - COMPLETE
   static async findAll() {
     const result = await db.query(
           `SELECT username
@@ -107,6 +107,7 @@ class User {
    * Throws NotFoundError if user not found.
    **/
 
+// CAPSTONE 2 - COMPLETE
   static async get(username) {
     const userRes = await db.query(
           `SELECT username
@@ -172,7 +173,7 @@ class User {
   }
 
   /** Delete given user from database; returns undefined. */
-
+// CAPSTONE 2 - complete - had TOKEN and CORRECT user
   static async remove(username) {
     let result = await db.query(
           `DELETE

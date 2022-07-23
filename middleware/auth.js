@@ -14,7 +14,8 @@ const { UnauthorizedError } = require("../expressError");
  *
  * It's not an error if no token was provided or if the token is not valid.
  */
-
+// CAPSTONE 2 - COMPLETE - (on all routes) if token provided then store payload
+// on res.locals for use
 function authenticateJWT(req, res, next) {
   try {
     const authHeader = req.headers && req.headers.authorization;
@@ -32,10 +33,11 @@ function authenticateJWT(req, res, next) {
  *
  * If not, raises Unauthorized.
  */
-
+// CAPSTONE 2 - COMPLETE - use for AUTH LVL 1 - just LOGGED IN - important
 function ensureLoggedIn(req, res, next) {
   try {
     if (!res.locals.user) throw new UnauthorizedError();
+    console.log("live, from inside ensureloggedin", res.locals.user);
     return next();
   } catch (err) {
     return next(err);
@@ -64,21 +66,24 @@ function ensureLoggedIn(req, res, next) {
  *
  *  If not, raises Unauthorized.
  */
-
-// function ensureCorrectUserOrAdmin(req, res, next) {
-//   try {
-//     const user = res.locals.user;
-//     if (!(user && (user.isAdmin || user.username === req.params.username))) {
-//       throw new UnauthorizedError();
-//     }
-//     return next();
-//   } catch (err) {
-//     return next(err);
-//   }
-// }
+// CAPSTONE 2 - COMPLETE - use for AUTH LVL 2 - just LOGGED IN - important
+function ensureCorrectUser(req, res, next) {
+  try {
+    const user = res.locals.user;
+    console.log("starting to loggin ", user, "req.param", req.params.username);
+    if (!(user && (user.username === req.params.username))) {
+      throw new UnauthorizedError();
+    }
+    console.log("correctly auth match user to: ", user);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
 
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureCorrectUser,
 };

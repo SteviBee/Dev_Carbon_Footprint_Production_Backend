@@ -8,6 +8,7 @@ const express = require("express");
 const { BadRequestError } = require("../expressError");
 const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
 
@@ -25,8 +26,8 @@ const router = express.Router();
  *
  * Authorization required: admin
  **/
-
-router.post("/", async function (req, res, next) {
+// CAPSTONE 2 - COMPLETE - returns PAYLOAD which is username (model) and token
+router.post("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, userNewSchema);
     if (!validator.valid) {
@@ -49,8 +50,8 @@ router.post("/", async function (req, res, next) {
  *
  * Authorization required: admin
  **/
-
-router.get("/", async function (req, res, next) {
+// CAPSTONE 2 - COMPLETE - shows all users
+router.get("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const users = await User.findAll();
     return res.json({ users });
@@ -68,7 +69,7 @@ router.get("/", async function (req, res, next) {
  * Authorization required: admin or same user-as-:username
  **/
 
-router.get("/:username", async function (req, res, next) {
+router.get("/:username", ensureCorrectUser, async function (req, res, next) {
   try {
     const user = await User.get(req.params.username);
     return res.json({ user });
@@ -87,7 +88,7 @@ router.get("/:username", async function (req, res, next) {
  *
  * Authorization required: admin or same-user-as-:username
  **/
-
+// CAPSTONE 2 - MAYBE DONT DO
 router.patch("/:username", async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, userUpdateSchema);
@@ -108,8 +109,8 @@ router.patch("/:username", async function (req, res, next) {
  *
  * Authorization required: admin or same-user-as-:username
  **/
-
-router.delete("/:username", async function (req, res, next) {
+// CAPSTONE 2 - complete - had TOKEN and CORRECT user
+router.delete("/:username", ensureCorrectUser, async function (req, res, next) {
   try {
     await User.remove(req.params.username);
     return res.json({ deleted: req.params.username });
@@ -119,22 +120,6 @@ router.delete("/:username", async function (req, res, next) {
 });
 
 
-/** POST /[username]/jobs/[id]  { state } => { application }
- *
- * Returns {"applied": jobId}
- *
- * Authorization required: admin or same-user-as-:username
- * */
-
-router.post("/:username/jobs/:id", async function (req, res, next) {
-  try {
-    const jobId = +req.params.id;
-    await User.applyToJob(req.params.username, jobId);
-    return res.json({ applied: jobId });
-  } catch (err) {
-    return next(err);
-  }
-});
 
 
 module.exports = router;

@@ -9,10 +9,10 @@ const cors = require("cors");
 const { NotFoundError } = require("./expressError");
 const { authenticateJWT } = require("./middleware/auth");
 const usersRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
 
 
 // DELETE THIS ******************************
-// const authRoutes = require("./routes/auth");
 // const companiesRoutes = require("./routes/companies");
 // const jobsRoutes = require("./routes/jobs");
 
@@ -27,9 +27,9 @@ app.use(authenticateJWT);
 
 // Setting Routes
 app.use("/users", usersRoutes);
+app.use("/auth", authRoutes);
 
 // DELETE THIS ******************************?
-// app.use("/auth", authRoutes);
 // app.use("/companies", companiesRoutes);
 // app.use("/jobs", jobsRoutes);
 
