@@ -10,6 +10,7 @@ const { NotFoundError } = require("./expressError");
 const { authenticateJWT } = require("./middleware/auth");
 const usersRoutes = require("./routes/users");
 const authRoutes = require("./routes/auth");
+const calcRoutes = require("./routes/calc");
 
 
 // DELETE THIS ******************************
@@ -28,6 +29,7 @@ app.use(authenticateJWT);
 // Setting Routes
 app.use("/users", usersRoutes);
 app.use("/auth", authRoutes);
+app.use("/calc", calcRoutes);
 
 // DELETE THIS ******************************?
 // app.use("/companies", companiesRoutes);
