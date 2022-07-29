@@ -100,12 +100,8 @@ describe("POST /auth/register", function () {
     const resp = await request(app)
         .post("/auth/register")
         .send({
-          username: "new",
-          firstName: "first",
-          lastName: "last",
-          password: "password",
-          email: "not-an-email",
-        });
+          username: "new"
+          });
     expect(resp.statusCode).toEqual(400);
   });
 });

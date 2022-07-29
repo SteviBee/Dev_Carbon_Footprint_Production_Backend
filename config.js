@@ -7,6 +7,7 @@ require("colors");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 // TODO - figure out secure way to store this later
+// ADD TO ENV FILE
 const API_KEY = "704JX6R8XZ4B8SKY7KWKWA1HVG5M"
 const BASE_EXT_API = "https://beta3.api.climatiq.io"
 
