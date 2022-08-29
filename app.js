@@ -16,6 +16,7 @@ const calcRoutes = require("./routes/calc");
 // DELETE THIS ******************************
 // const companiesRoutes = require("./routes/companies");
 // const jobsRoutes = require("./routes/jobs");
+// 8/29 - Will review / redo soon.
 
 const morgan = require("morgan");
 
