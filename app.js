@@ -17,6 +17,7 @@ const calcRoutes = require("./routes/calc");
 // const companiesRoutes = require("./routes/companies");
 // const jobsRoutes = require("./routes/jobs");
 // 8/29 - Will review / redo soon.
+// 10/6 - will comeback and clean up soon
 
 const morgan = require("morgan");
 
